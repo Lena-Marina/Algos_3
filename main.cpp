@@ -1,20 +1,6 @@
-/* TO-Dos:
-Lena:
--)  Kommandozeilen Parameter ergänzen (1. Parameter-> relativer Pfad zu file. ; 2. Parameter-> Startstation ; 3. Parameter -> Zielstation
--)  Protokoll fürs Einlesen schreiben
-
-
-Jana:
-
-
-
-
-*/
-
-
 #include <iostream>
 #include <fstream>
-#include <sstream> /**/
+#include <sstream>
 #include <string>
 #include <vector>
 #include <unordered_map> /*= eine Hashmap Such/Einfüg/Löschoperationen O(1) https://www.geeksforgeeks.org/unordered_map-in-cpp-stl/*/
@@ -42,8 +28,6 @@ struct KnotenInfo {
     string linieZuVorgaenger; //von welcher Linie komme ich
 };
 
-
-
 struct HeapElement {
     string station;
     int total_weight;
@@ -67,11 +51,11 @@ void printPath(unordered_map<string, KnotenInfo> node_data,string startknoten, s
 
 
 
-int main() {
+int main(int argc, char* argv[]) { //argv[1] 0 relativer Pfad zu Graph | argv[2] = StartStation | argv[3] = ZielStation
 ////////////////////////////////////////////////////////////
 //            Einlesen des Graphen aus der Datei          //
 ////////////////////////////////////////////////////////////
-    ifstream file("stationen.txt");
+    ifstream file(argv[1]);
     if (!file.is_open()) {
         cerr << "Fehler beim Öffnen der Datei!" << endl;
         return 1;
@@ -117,9 +101,7 @@ int main() {
 
 //Tests:
 //printGraphByLine(graph);
-    // printNeighborsStation(graph["Matzleinsdorferplatz"]);
-
-
+//printNeighborsStation(graph["Matzleinsdorferplatz"]);
 
 
 ///////////////////////////////////////////////////
@@ -127,8 +109,8 @@ int main() {
 ///////////////////////////////////////////////////
 
 
-    string startknoten = "Schottentor";
-    string endknoten= "Karlsplatz";
+    string startknoten = argv[2];
+    string endknoten= argv[3];
 
     cout <<"start: " << startknoten << " Ende: " << endknoten << endl;
 
@@ -199,7 +181,7 @@ void dijkstra(unordered_map<string, vector<KantenInfo>> graph, string startknote
     do {
         cout << "\nAnzahl besuchter Stationen: " << counter<<endl;
 
-        currentStation = heap.top().station;
+        currentStation = heap.top().station; //die station mit dem geringsten Gewicht
         currentWeight = heap.top().total_weight;
         heap.pop();
 
@@ -231,8 +213,8 @@ void dijkstra(unordered_map<string, vector<KantenInfo>> graph, string startknote
 
             if (!node_data[nachbar].visited) {
 
-                int new_weight = currentWeight + kante.weight; //
-                if (new_weight < node_data[nachbar].total_weight) {
+                int new_weight = currentWeight + kante.weight; //"Was würde es kosten, von Start bis zu nachbar, über currentStation zu gehen?"
+                if (new_weight < node_data[nachbar].total_weight) { //"Wenn der neue Weg über currentStation kürzer ist als der bisher bekannte Weg zum Knoten nachbar, dann aktualisiere diesen Weg."
                     node_data[nachbar].total_weight = new_weight;
                     node_data[nachbar].vorgaengerKnoten = currentStation;
                     node_data[nachbar].linieZuVorgaenger = kante.line;
@@ -254,6 +236,8 @@ void dijkstra(unordered_map<string, vector<KantenInfo>> graph, string startknote
         counter++;
 
     } while (!zielKnotenErreicht && !heap.empty());
+
+
     //!heap.empty() -> Station nicht erreichbar / nicht vorhanden (vertippt) Abbruch der Schleife, wenn alle Stationen besucht wurden
     //oder abbruch der Schleife wenn das Ziel erreicht wurde
 
@@ -280,7 +264,8 @@ void printPath(unordered_map<string, KnotenInfo> node_data,string startknoten, s
         pfadSchritte.push_back({aktuell, node_data[aktuell].linieZuVorgaenger});
         aktuell = node_data[aktuell].vorgaengerKnoten;
     }
-    reverse(pfadSchritte.begin(), pfadSchritte.end());
+
+    reverse(pfadSchritte.begin(), pfadSchritte.end()); //Algorithmus aus <algorithm>
 
     // Ausgabe des Pfads
     cout << "\n--- Kuerzester Pfad (" << node_data[endknoten].total_weight << " Minuten) ---\n";
