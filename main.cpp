@@ -68,14 +68,15 @@ int main()
         int weight;
         string dummy; //verhindert, dass die " eingelesen werden
 
-        //erste Station der Linie
+
         iss >> ws; //std::ws (steht für whitespace) in kombination mit >> extrahiert alle führenden whitespaces
         getline(iss, dummy, '"'); //' lies aus iss solange in dummy bis du ein " findest '
 
-        if (!getline(iss, prevStation, '"')) continue; //versuche in prevStation bis zumnächsten " einzulesen, wenn das nicht klappt (e.g. du findest kein "), dann überspringe diesen Loop -> gehe zur nächsten Zeile im File über
+        //erste Station der Linie
+        if (!getline(iss, prevStation, '"')) continue; //versuche in prevStation bis zumnächsten " einzulesen, wenn das nicht klappt (e.g. du findest kein "), dann überspringe diesen Loop -> gehe zur nächsten Zeile im File
 
         //alle weiteren Stationen der Linie
-        while (iss >> weight) //jetzt wird das gewicht eingelesen
+        while (iss >> weight) //jetzt wird das Gewicht der Verbindung zwischen den beiden Stationen, eingelesen, da weight ein Int ist, wird nur so lange eingelesen wie Zahlen vorhanden sind. (also nur das Gewicht)
         {
             iss >> ws;
             getline(iss, dummy, '"');
