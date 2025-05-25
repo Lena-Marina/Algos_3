@@ -11,7 +11,6 @@
 #include <algorithm> //reverse
 
 
-
 using namespace std;
 
 // Struktur für gewichtete Kante mit Linieninfo
@@ -97,7 +96,6 @@ int main(int argc, char* argv[]) { //argv[1] 0 relativer Pfad zu Graph | argv[2]
     }
 
     file.close();
-
 
 //Tests:
 //printGraphByLine(graph);
@@ -218,7 +216,8 @@ void dijkstra(unordered_map<string, vector<KantenInfo>> graph, string startknote
                     node_data[nachbar].total_weight = new_weight;
                     node_data[nachbar].vorgaengerKnoten = currentStation;
                     node_data[nachbar].linieZuVorgaenger = kante.line;
-                    heap.push({nachbar, new_weight});
+
+                    heap.push({nachbar, new_weight}); //O(log n)
 
                     cout << "Nachbar " << nachbar << " unbesucht " <<
                     "| aktuelle Kosten : " << node_data[nachbar].total_weight<<endl;
@@ -291,6 +290,13 @@ void printPath(unordered_map<string, KnotenInfo> node_data,string startknoten, s
 
     cout << "\n[ZIEL] " << endknoten << "\n" << endl;
 }
+
+
+
+
+
+
+
 
 
 
